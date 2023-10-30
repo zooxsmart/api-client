@@ -1,5 +1,5 @@
 {
-    "name": "los/api-client",
+    "name": "zooxsmart/los-api-client",
     "description": "REST API Client using Hal",
     "license": "MIT",
     "type": "library",
