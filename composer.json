@@ -23,19 +23,19 @@
         "guzzlehttp/guzzle": "^7.8",
         "guzzlehttp/psr7": "^2.6",
         "laminas/laminas-eventmanager": "^3.12",
-        "laminas/laminas-paginator": "^2.17",
+        "laminas/laminas-paginator": "^2.18",
         "psr/container": "^1.0 || ^2.0",
         "psr/link": "^1.0",
         "psr/simple-cache": "^1.0",
         "ramsey/uuid": "^4.7"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^12.0",
-        "phpstan/phpstan": "^1.10.39",
+        "doctrine/coding-standard": "^12.0.0",
+        "phpstan/phpstan": "^1.10",
         "squizlabs/php_codesniffer": "^3.7.2"
     },
     "suggest": {
-        "los/loslog": "los/loslog for logging"
+        "zooxsmart/los-log": "zooxsmart/los-log for logging"
     },
     "autoload": {
         "psr-4": {
