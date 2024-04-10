@@ -297,7 +297,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
             'options' => $options,
         ]);
 
-        return $this->handleResponse($response, (bool) ($options['raw_response'] ?? false));
+        return $this->handleResponse($response, $request, (bool) ($options['raw_response'] ?? false));
     }
 
     /**
@@ -397,7 +397,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
     }
 
     /** @throws Exception\BadResponse */
-    private function handleResponse(ResponseInterface $response, bool $rawResponse): ApiResource
+    private function handleResponse(ResponseInterface $response, RequestInterface $request, bool $rawResponse): ApiResource
     {
         $statusCode     = $response->getStatusCode();
         $this->response = $response;
@@ -407,7 +407,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         }
 
         if (!$this->allow5xx && $statusCode >= 500 && $statusCode <= 599) {
-            throw $this->exception5xx::create($response);
+            throw $this->exception5xx::create($response, '', ['request'=> $request]);
         }
 
         if (array_key_exists($statusCode, $this->exceptionStatusCodes)) {
