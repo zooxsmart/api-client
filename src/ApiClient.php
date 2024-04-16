@@ -194,7 +194,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         return $this->request('POST', $uri, $options);
     }
 
-    public function postCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null, bool $saveCache = true): ApiResource
+    public function postCached(string $uri, ?string $cacheKey = null, array $options = [], ?int $ttl = null, bool $saveCache = true): ApiResource
     {
         return $this->handleCached('POST', $uri, $cacheKey, $options, $ttl, $saveCache);
     }
