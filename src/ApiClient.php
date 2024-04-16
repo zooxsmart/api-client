@@ -162,7 +162,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         return $this->request('GET', $uri, $options);
     }
 
-    public function getCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null): ApiResource
+    public function getCached(string $uri, ?string $cacheKey = null, array $options = [], ?int $ttl = null): ApiResource
     {
         return $this->handleCached('GET', $uri, $cacheKey, $options, $ttl);
     }
@@ -194,7 +194,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         return $this->request('POST', $uri, $options);
     }
 
-    public function postCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null): ApiResource
+    public function postCached(string $uri, ?string $cacheKey = null, array $options = [], ?int $ttl = null): ApiResource
     {
         return $this->handleCached('POST', $uri, $cacheKey, $options, $ttl);
     }
@@ -533,11 +533,19 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
     private function handleCached(
         string $httpMethod,
         string $uri,
-        string $cacheKey,
+        ?string $cacheKey = null,
         array $options = [],
         ?int $ttl = null,
     ): ApiResource {
         $httpMethodNormalized = strtolower($httpMethod);
+
+        if (! $cacheKey) {
+            $cacheKey = str_replace(['/'], '-', trim($uri, '/'));
+
+            if ($httpMethod == 'POST' && isset($options['body'])) {
+                $cacheKey = md5($options['body']);
+            } 
+        }
 
         if (!method_exists($this, $httpMethodNormalized)) {
             throw new Exception\RuntimeError(sprintf('Method %s not defined.', $httpMethodNormalized));
