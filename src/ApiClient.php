@@ -162,9 +162,9 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         return $this->request('GET', $uri, $options);
     }
 
-    public function getCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null): ApiResource
+    public function getCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null, bool $saveCache = true): ApiResource
     {
-        return $this->handleCached('GET', $uri, $cacheKey, $options, $ttl);
+        return $this->handleCached('GET', $uri, $cacheKey, $options, $ttl, $saveCache);
     }
 
     public function clearCacheKey(string $cacheKey): void
@@ -194,9 +194,9 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         return $this->request('POST', $uri, $options);
     }
 
-    public function postCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null): ApiResource
+    public function postCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null, bool $saveCache = true): ApiResource
     {
-        return $this->handleCached('POST', $uri, $cacheKey, $options, $ttl);
+        return $this->handleCached('POST', $uri, $cacheKey, $options, $ttl, $saveCache);
     }
 
     /**
@@ -536,6 +536,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         string $cacheKey,
         array $options = [],
         ?int $ttl = null,
+        bool $saveCache = true
     ): ApiResource {
         $httpMethodNormalized = strtolower($httpMethod);
 
@@ -559,7 +560,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
 
         $responseArray = $response->toArray();
 
-        if (!$response->isErrorResource() && !empty($responseArray)) {
+        if (!$response->isErrorResource() && !empty($responseArray) && $saveCache) {
             $cacheSaved = $this->cache->set($cacheKey, json_encode($responseArray), $ttl);
 
             if (!$cacheSaved) {
