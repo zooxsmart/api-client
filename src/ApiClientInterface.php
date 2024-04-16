@@ -39,7 +39,7 @@ interface ApiClientInterface
      */
     public function get($uri, array $options = []): ApiResource;
 
-    public function getCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null): ApiResource;
+    public function getCached(string $uri, ?string $cacheKey = null, array $options = [], ?int $ttl = null): ApiResource;
 
     /**
      * @param string|UriInterface $uri
@@ -52,7 +52,7 @@ interface ApiClientInterface
      */
     public function post($uri, array $options = []): ApiResource;
 
-    public function postCached(string $uri, string $cacheKey, array $options = [], ?int $ttl = null): ApiResource;
+    public function postCached(string $uri, ?string $cacheKey = null, array $options = [], ?int $ttl = null): ApiResource;
 
     /**
      * @param string|UriInterface $uri
