@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Los\ApiClient;
 
+//imports
 use GuzzleHttp\Exception as GuzzleException;
 use GuzzleHttp\Psr7 as GuzzlePsr7;
 use Laminas\EventManager\EventManagerAwareInterface;
