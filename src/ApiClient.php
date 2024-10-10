@@ -169,11 +169,11 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
 
     public function clearCacheKey(string $cacheKey): void
     {
-        if (!$this->cache instanceof CacheInterface) {
+        if (! $this->cache instanceof CacheInterface) {
             return;
         }
 
-        if (!$this->cache->has($cacheKey)) {
+        if (! $this->cache->has($cacheKey)) {
             return;
         }
 
@@ -354,7 +354,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         }
 
         $debugCookie = $_COOKIE['XDEBUG_SESSION'] ?? null;
-        if ($debugCookie != null) {
+        if ($debugCookie !== null) {
             $request = $request->withHeader('Cookie', 'XDEBUG_SESSION=debug');
         }
 
@@ -368,7 +368,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
     {
         $uri = $request->getUri();
 
-        if (!is_array($query)) {
+        if (! is_array($query)) {
             $query = GuzzlePsr7\Query::parse($query);
         }
 
@@ -385,7 +385,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
     {
         if (is_array($body)) {
             $body = json_encode($body);
-            if (!$request->hasHeader('Content-Type')) {
+            if (! $request->hasHeader('Content-Type')) {
                 $request = $request->withHeader(
                     'Content-Type',
                     'application/json',
@@ -406,8 +406,8 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
             throw Exception\BadResponse::create($response);
         }
 
-        if (!$this->allow5xx && $statusCode >= 500 && $statusCode <= 599) {
-            throw $this->exception5xx::create($response, '', ['request'=> $request]);
+        if (! $this->allow5xx && $statusCode >= 500 && $statusCode <= 599) {
+            throw $this->exception5xx::create($response, '', ['request' => $request]);
         }
 
         if (array_key_exists($statusCode, $this->exceptionStatusCodes)) {
@@ -430,12 +430,12 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
     {
         static $resolver, $castRel;
 
-        if (!$resolver) {
+        if (! $resolver) {
             $resolver = ['GuzzleHttp\Psr7\UriResolver', 'resolve'];
             $castRel  = true;
         }
 
-        if ($castRel && !($rel instanceof UriInterface)) {
+        if ($castRel && ! ($rel instanceof UriInterface)) {
             $rel = new GuzzlePsr7\Uri($rel);
         }
 
@@ -444,7 +444,7 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
 
     public function addRequestId(RequestInterface $request, ?string $id = null): RequestInterface
     {
-        if (!$request->hasHeader('X-Request-Id')) {
+        if (! $request->hasHeader('X-Request-Id')) {
             return clone $request;
         }
 
@@ -536,15 +536,15 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
         string $cacheKey,
         array $options = [],
         ?int $ttl = null,
-        bool $saveCache = true
+        bool $saveCache = true,
     ): ApiResource {
         $httpMethodNormalized = strtolower($httpMethod);
 
-        if (!method_exists($this, $httpMethodNormalized)) {
+        if (! method_exists($this, $httpMethodNormalized)) {
             throw new Exception\RuntimeError(sprintf('Method %s not defined.', $httpMethodNormalized));
         }
 
-        if (!$this->cache instanceof CacheInterface) {
+        if (! $this->cache instanceof CacheInterface) {
             throw new Exception\RuntimeError('No cache defined.');
         }
 
@@ -560,10 +560,10 @@ final class ApiClient implements ApiClientInterface, EventManagerAwareInterface
 
         $responseArray = $response->toArray();
 
-        if (!$response->isErrorResource() && !empty($responseArray) && $saveCache) {
+        if (! $response->isErrorResource() && ! empty($responseArray) && $saveCache) {
             $cacheSaved = $this->cache->set($cacheKey, json_encode($responseArray), $ttl);
 
-            if (!$cacheSaved) {
+            if (! $cacheSaved) {
                 throw new CacheNotSaved();
             }
         }
